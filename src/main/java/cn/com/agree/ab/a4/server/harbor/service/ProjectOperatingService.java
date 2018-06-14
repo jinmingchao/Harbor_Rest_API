@@ -30,6 +30,7 @@ import cn.com.agree.ab.a4.server.harbor.utils.HarborApiUtil_dep;
  *
  * @usage harbor中对项目操作相关的restful api
  */
+
 public class ProjectOperatingService {
 	private static HttpClient httpClient = HarborApiUtil_dep.initHarborHttpClient();
 	private static HttpClient postClient = null;

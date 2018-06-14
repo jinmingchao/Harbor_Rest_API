@@ -31,6 +31,7 @@ public class HarborHttpRequestBean {
 		this.requestEntity=requestEntity;
 	}
 	
+	
 	public String getAuthorityText() {
 		return authorityText;
 	}
@@ -91,10 +92,12 @@ public class HarborHttpRequestBean {
 		return JSONObject.parseObject(CONSTRUCTION_METHOD_ERROR_RESPONSE);
 	}
      
-	public static JSONObject sendHttpDelete(String method,String authorityText, String domain,String url) {
-
+	public static JSONObject sendHttpDelete(String method,String authorityText, String domain,String url,Integer... ids) {
 		try {
+			if(ids.length==0)
 			return HttpClientUtil.sendHttpDelete(new HarborHttpRequestBean(method,authorityText,domain,url));
+			else
+			return HttpClientUtil.sendHttpDelete(new HarborHttpRequestBean(method,authorityText,domain,url),ids[0]);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,4 +114,5 @@ public class HarborHttpRequestBean {
 		}
 		return JSONObject.parseObject(CONSTRUCTION_METHOD_ERROR_RESPONSE);
 	}
+	
 }

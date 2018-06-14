@@ -1,4 +1,4 @@
-package harbor.test.test;
+package cn.com.agree.ab.a4.server.harbor.test;
 
 import cn.com.agree.ab.a4.server.harbor.bean.HarborUserBean;
 import cn.com.agree.ab.a4.server.harbor.service.ProjectMemberOperatingService;

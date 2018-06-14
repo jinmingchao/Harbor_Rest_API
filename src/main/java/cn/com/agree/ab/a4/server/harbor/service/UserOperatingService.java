@@ -73,7 +73,7 @@ public class UserOperatingService {
 		Map<String, Object> userProps = new LinkedHashMap<String, Object>();
 		userProps.put("user_id", 0);
 		userProps.put("username", createdUser.getUsername());
-		userProps.put("email", createdUser.getEmail());
+		userProps.put("email",createdUser.getEmail());
 		userProps.put("password", createdUser.getPassword());
 		userProps.put("realname", createdUser.getRealname());
 		userProps.put("comment", createdUser.getComment());
@@ -106,46 +106,11 @@ public class UserOperatingService {
 	 * 
 	 */
 	
-	public static JSONObject getStatisticAboutUser(HarborUserBean searchedUser) {
-		String text = searchedUser.getUsername() + ":" + searchedUser.getPassword();
-		String domain = searchedUser.getDomain();	
+	public static JSONObject getStatisticAboutUser(HarborUserBean hbuser) {
+		String text = hbuser.getUsername() + ":" + hbuser.getPassword();
+		String domain = hbuser.getDomain();	
 		String url = "http://" + domain + "/api/users";
-		return HarborHttpRequestBean.sendHttpGet("getStatisticAboutUser", text, domain, url);
-			
-		//		String text = username + ":" + password;
-//		String encodingText;
-//		encodingText = Base64Util.generateAuthorityText(text);
-//		String responseEntity = "";
-//		int code = -1;
-//		HttpGet get;
-//		try {
-//			String url = "http://" + domain + "/api/statistics";
-//			get = new HttpGet(url);
-//			get = (HttpGet) HarborApiUtil_dep.curlSetHeader(get, encodingText, domain, "j");
-//			httpResponse = httpClient.execute(get);
-//			code = httpResponse.getStatusLine().getStatusCode();
-//			responseEntity = EntityUtils.toString(httpResponse.getEntity());
-//			// System.out.println("--------------responseEntity:"+httpResponse.getStatusLine().getReasonPhrase());
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		JSONArray returnArr = new JSONArray();
-//		JSONObject statusObj = new JSONObject();
-//		JSONObject responseObj = new JSONObject();
-//		statusObj.put("statusCode", code);
-//		// System.out.println(responseEntity);
-//		returnArr.add(statusObj);
-//		if (code != 200) {
-//			if (code == -1)
-//				responseObj.put("error", "-1");
-//			else
-//				responseObj.put("error", httpResponse.getStatusLine().getReasonPhrase().replaceAll("\\n", ""));
-//		} else
-//			responseObj.put("success", JSONObject.parseObject(responseEntity));
-//		returnArr.add(responseObj);
-//		return returnArr;
-
+		return HarborHttpRequestBean.sendHttpGet("getStatisticAboutUser", text, domain, url);	
 	}
 
 	/**
@@ -159,39 +124,11 @@ public class UserOperatingService {
 	 * @comment curl command:
 	 * 
 	 */
-	public static JSONArray deleteUserByUserId(String domain, String username, String password, int uid) {
-		String text = username + ":" + password;
-		String encodingText;
-		encodingText = Base64Util.generateAuthorityText(text);
-		int code = -1;
-		JSONObject returnObj = new JSONObject();
-		HttpDelete delete;
-		try {
-			String url = "http://" + domain + "/api/users/" + uid;
-			delete = new HttpDelete(url);
-			delete = (HttpDelete) HarborApiUtil_dep.curlSetHeader(delete, encodingText, domain, "");
-			httpResponse = httpClient.execute(delete);
-			code = httpResponse.getStatusLine().getStatusCode();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		JSONArray returnArr = new JSONArray();
-		JSONObject statusObj = new JSONObject();
-		JSONObject responseObj = new JSONObject();
-		statusObj.put("statusCode", code);
-		// System.out.println(responseEntity);
-		returnArr.add(statusObj);
-		if (code != 200) {
-			if (code == -1)
-				responseObj.put("error", "-1");
-			else
-				responseObj.put("error", httpResponse.getStatusLine().getReasonPhrase().replaceAll("\\n", ""));
-		} else
-			responseObj.put("success", uid);
-		returnArr.add(responseObj);
-		return returnArr;
-
+	public static JSONObject deleteUserByUserId(HarborUserBean hbuser, Integer uid) {
+		String text = hbuser.getUsername() + ":" + hbuser.getPassword();
+		String domain = hbuser.getDomain();	
+		String url = "http://" + domain + "/api/users/"+uid;
+		return HarborHttpRequestBean.sendHttpDelete("deleteUserByUserId",text,domain,url,uid);
 	}
 
 	/**
@@ -206,81 +143,41 @@ public class UserOperatingService {
 	 * @comment curl command:
 	 * 
 	 */
-	public static JSONArray endueUserSysAdminAuth(String domain, String username, String password, int uid,
+	
+	
+	/**
+	 * @author 
+			jinmingchao
+	 * @date 
+			2018-06-14 14:44:29 
+	 * @usage 
+			  		
+	 * @args
+	        required:
+				
+			optional:
+				
+	   @return 
+			JSONObject
+	 *      				
+	 */
+	public static JSONObject endueUserSysAdminAuth(HarborUserBean hbuser,int uid,
 			int has_admin_role) {
-		String text = username + ":" + password;
-		String encodingText;
-		encodingText = Base64Util.generateAuthorityText(text);
-		int code = -1;
-		String request_body = "{\"has_admin_role\":" + has_admin_role + "}";
-		HttpPut put;
-		try {
-			String url = "http://" + domain + "/api/users/" + uid + "/sysadmin";
-			put = new HttpPut(url);
-			StringEntity se = new StringEntity(request_body);
-			se.setContentEncoding("UTF-8");
-			se.setContentType("application/json");// 发送json数据需要设置contentType
-			put.setEntity(se);
-			put = (HttpPut) HarborApiUtil_dep.curlSetHeader(put, encodingText, domain, "");
-			httpResponse = httpClient.execute(put);
-			code = httpResponse.getStatusLine().getStatusCode();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		JSONArray returnArr = new JSONArray();
-		JSONObject statusObj = new JSONObject();
-		JSONObject responseObj = new JSONObject();
-		statusObj.put("statusCode", code);
-		// System.out.println(responseEntity);
-		returnArr.add(statusObj);
-		if (code != 200) {
-			if (code == -1)
-				responseObj.put("error", "-1");
-			else
-				responseObj.put("error", httpResponse.getStatusLine().getReasonPhrase().replaceAll("\\n", ""));
-		} else
-			responseObj.put("success", uid);
-		returnArr.add(responseObj);
-		return returnArr;
+		
+		String text = hbuser.getUsername() + ":" + hbuser.getPassword();
+		String domain = hbuser.getDomain();	
+		String url = "http://" + domain + "/api/users/"+uid+"/sysadmin";
+		Map<String, Object> props = new LinkedHashMap<String, Object>();
+		props.put("has_admin_role",0);
+		return HarborHttpRequestBean.sendHttpPut("endueUserSysAdminAuth",text,domain,url,props);
+
 	}
 
-	public static JSONArray getCurrentUser(String domain, String username, String password) {
-		String text = username + ":" + password;
-		String encodingText;
-		encodingText = Base64Util.generateAuthorityText(text);
-		int code = -1;
-		String responseEntity = "";
-		HttpGet get;
-		try {
-			String url = "http://" + domain + "/api/users/current";
-			get = new HttpGet(url);
-			get = (HttpGet) HarborApiUtil_dep.curlSetHeader(get, encodingText, domain, "");
-			httpResponse = httpClient.execute(get);
-			@SuppressWarnings("unused")
-			HttpEntity httpEntity = httpResponse.getEntity();
-			code = httpResponse.getStatusLine().getStatusCode();
-			responseEntity = EntityUtils.toString(httpResponse.getEntity());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		JSONArray returnArr = new JSONArray();
-		JSONObject statusObj = new JSONObject();
-		JSONObject responseObj = new JSONObject();
-		statusObj.put("statusCode", code);
-		// System.out.println(responseEntity);
-		returnArr.add(statusObj);
-		if (code != 200) {
-			if (code == -1)
-				responseObj.put("error", "-1");
-			else
-				responseObj.put("error", httpResponse.getStatusLine().getReasonPhrase().replaceAll("\\n", ""));
-		} else
-			responseObj.put("success", JSONObject.parseObject(responseEntity));
-		returnArr.add(responseObj);
-		return returnArr;
-
+	public static JSONObject getCurrentUser(HarborUserBean hbuser) {
+		String text = hbuser.getUsername() + ":" + hbuser.getPassword();
+		String domain = hbuser.getDomain();	
+		String url = "http://" + domain + "/api/users";
+		return HarborHttpRequestBean.sendHttpGet("getCurrentUser", text, domain, url);	
 	}
 
 	public static JSONArray searchUser(String domain, String username, String password, int uid) {
@@ -320,121 +217,112 @@ public class UserOperatingService {
 		return returnArr;
 	}
 
+	
 	/**
 	 * @author 
 			jinmingchao
 	 * @date 
-			2018-06-05 10:25:05 
+			2018-06-14 16:14:28 
 	 * @usage 
-			 获得指定用户的基本信息 		
+			  		
 	 * @args
 	        required:
-				HarborUserBean userObj
+				
+			optional:
+				
 	   @return 
 			JSONObject
 	 *      				
 	 */
-	public static JSONObject getUserInfoByUserId(HarborUserBean userObj) {	
-		String text = userObj.getUsername() + ":" + userObj.getPassword();
-		String domain = userObj.getDomain();	
-		String url = "http://" + domain + "/api/users/"+userObj.getUser_id();
-		return HarborHttpRequestBean.sendHttpGet("searchUsers", text, domain, url);
+	public static JSONObject getUserInfoByUserId(HarborUserBean hbuser) {	
+		String text = hbuser.getUsername() + ":" + hbuser.getPassword();
+		String domain = hbuser.getDomain();	
+		String url = "http://" + domain + "/api/users/"+hbuser.getUser_id();
+		return HarborHttpRequestBean.sendHttpGet("getUserInfoByUserId", text, domain, url);
 	}
 
-	public static JSONArray modifyUserPwdByUserId(String domain, String username, String password, HarborUserBean userjo) {
-		String text = username + ":" + password;
-		String encodingText;
-		encodingText = Base64Util.generateAuthorityText(text);
-		HttpPut put;
-		JSONObject requestObj = new JSONObject();
-		requestObj.put("old_password",
-				userjo.getOld_password() == null || userjo.getOld_password().trim().equals("") ? ""
-						: userjo.getOld_password());
-		requestObj.put("new_password",
-				userjo.getOld_password() == null || userjo.getNew_password().trim().equals("") ? ""
-						: userjo.getNew_password());
-		int code = -1;
-		String responseEntity = "";
-		int uid = userjo.getUser_id() == null ? -1 : userjo.getUser_id();
-		try {
-			String url = "http://" + domain + "/api/users/" + uid + "/password";
-			put = new HttpPut(url);
-			StringEntity se = new StringEntity(requestObj.toJSONString());
-			se.setContentEncoding("UTF-8");
-			se.setContentType("application/json");// 发送json数据需要设置contentType
-			put.setEntity(se);
-			put = (HttpPut) HarborApiUtil_dep.curlSetHeader(put, encodingText, domain, "");
-			httpResponse = httpClient.execute(put);
-			code = httpResponse.getStatusLine().getStatusCode();
-			responseEntity = EntityUtils.toString(httpResponse.getEntity());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		JSONArray returnArr = new JSONArray();
-		JSONObject statusObj = new JSONObject();
-		JSONObject responseObj = new JSONObject();
-		statusObj.put("statusCode", code);
-		// System.out.println(responseEntity);
-		returnArr.add(statusObj);
-		if (code != 200) {
-			if (code == -1)
-				responseObj.put("error", "-1");
-			else if (code == 401 || code == 404)
-				responseObj.put("error", httpResponse.getStatusLine().getReasonPhrase().replaceAll("\\n", ""));
-			else // 400,403
-				responseObj.put("error", responseEntity.replaceAll("\\n", ""));
-		} else
-			responseObj.put("success", uid);
-		returnArr.add(responseObj);
-		return returnArr;
+	/**
+	 * @author 
+			jinmingchao
+	 * @date 
+			2018-06-14 16:14:18 
+	 * @usage 
+			  		
+	 * @args
+	        required:
+				
+			optional:
+				
+	   @return 
+			JSONObject
+	 *      				
+	 */
+	public static JSONObject modifyUserPwdByUserId(HarborUserBean hbuser,HarborUserBean modifiedUser) {
+		String text = hbuser.getUsername() + ":" + hbuser.getPassword();
+		String domain = hbuser.getDomain();
+		String url = "http://" + domain + "/api/users/"+modifiedUser.getUser_id()+"/password";
+		Map<String, Object> props = new LinkedHashMap<String, Object>();
+		props.put("old_password",modifiedUser.getOld_password());
+		props.put("new_password",modifiedUser.getNew_password());	
+		return HarborHttpRequestBean.sendHttpPut("modifyUserPwdByUserId",text,domain, url,props);				
 	}
 
-	public static JSONArray updateUserBaseInfo(String domain, String username, String password, HarborUserBean userjo) {
-		String text = username + ":" + password;
-		String encodingText;
-		encodingText = Base64Util.generateAuthorityText(text);// X
-		int code = -1;
-		JSONObject requestObj = new JSONObject();
-		requestObj.put("email",
-				userjo.getEmail() == null || userjo.getEmail().trim().equals("") ? "" : userjo.getEmail());
-		requestObj.put("realname",
-				userjo.getRealname() == null || userjo.getRealname().trim().equals("") ? "" : userjo.getRealname());
-		requestObj.put("comment",
-				userjo.getComment() == null || userjo.getComment().trim().equals("") ? "" : userjo.getComment());
-		HttpPut put;
-		String responseEntity = "";
-		int uid = userjo.getUser_id() == null ? -1 : userjo.getUser_id();
-		try {
-			String url = "http://" + domain + "/api/users/" + uid;
-			put = new HttpPut(url);
-			StringEntity se = new StringEntity(requestObj.toJSONString());
-			se.setContentEncoding("UTF-8");
-			se.setContentType("application/json");// 发送json数据需要设置contentType
-			put.setEntity(se);
-			put = (HttpPut) HarborApiUtil_dep.curlSetHeader(put, encodingText, domain, "");
-			httpResponse = httpClient.execute(put);
-			code = httpResponse.getStatusLine().getStatusCode();
-			responseEntity = EntityUtils.toString(httpResponse.getEntity());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		JSONArray returnArr = new JSONArray();
-		JSONObject statusObj = new JSONObject();
-		JSONObject responseObj = new JSONObject();
-		statusObj.put("statusCode", code);
-		// System.out.println(responseEntity);
-		returnArr.add(statusObj);
-		if (code != 200) {
-			if (code == -1)
-				responseObj.put("error", "-1");
-			else if (code == 401 || code == 404)
-				responseObj.put("error", httpResponse.getStatusLine().getReasonPhrase().replaceAll("\\n", ""));
-			else // 400,403
-				responseObj.put("error", responseEntity.replaceAll("\\n", ""));
-		} else
-			responseObj.put("success", uid);
-		returnArr.add(responseObj);
-		return returnArr;
+	public static JSONObject updateUserInfoByUserId(HarborUserBean hbuser,HarborUserBean modifiedUser) {
+		String text = hbuser.getUsername() + ":" + hbuser.getPassword();
+		String domain = hbuser.getDomain();
+		String url = "http://" + domain + "/api/users/"+modifiedUser.getUser_id()+"/password";
+		Map<String, Object> props = new LinkedHashMap<String, Object>();
+		props.put("old_password",modifiedUser.getOld_password());
+		props.put("new_password",modifiedUser.getNew_password());	
+		return HarborHttpRequestBean.sendHttpPut("updateUserInfoByUserId",text,domain, url,props);
+		
+		
+		
 	}
+//		String text = username + ":" + password;
+//		String encodingText;
+//		encodingText = Base64Util.generateAuthorityText(text);// X
+//		int code = -1;
+//		JSONObject requestObj = new JSONObject();
+//		requestObj.put("email",
+//				userjo.getEmail() == null || userjo.getEmail().trim().equals("") ? "" : userjo.getEmail());
+//		requestObj.put("realname",
+//				userjo.getRealname() == null || userjo.getRealname().trim().equals("") ? "" : userjo.getRealname());
+//		requestObj.put("comment",
+//				userjo.getComment() == null || userjo.getComment().trim().equals("") ? "" : userjo.getComment());
+//		HttpPut put;
+//		String responseEntity = "";
+//		int uid = userjo.getUser_id() == null ? -1 : userjo.getUser_id();
+//		try {
+//			String url = "http://" + domain + "/api/users/" + uid;
+//			put = new HttpPut(url);
+//			StringEntity se = new StringEntity(requestObj.toJSONString());
+//			se.setContentEncoding("UTF-8");
+//			se.setContentType("application/json");// 发送json数据需要设置contentType
+//			put.setEntity(se);
+//			put = (HttpPut) HarborApiUtil_dep.curlSetHeader(put, encodingText, domain, "");
+//			httpResponse = httpClient.execute(put);
+//			code = httpResponse.getStatusLine().getStatusCode();
+//			responseEntity = EntityUtils.toString(httpResponse.getEntity());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		JSONArray returnArr = new JSONArray();
+//		JSONObject statusObj = new JSONObject();
+//		JSONObject responseObj = new JSONObject();
+//		statusObj.put("statusCode", code);
+//		// System.out.println(responseEntity);
+//		returnArr.add(statusObj);
+//		if (code != 200) {
+//			if (code == -1)
+//				responseObj.put("error", "-1");
+//			else if (code == 401 || code == 404)
+//				responseObj.put("error", httpResponse.getStatusLine().getReasonPhrase().replaceAll("\\n", ""));
+//			else // 400,403
+//				responseObj.put("error", responseEntity.replaceAll("\\n", ""));
+//		} else
+//			responseObj.put("success", uid);
+//		returnArr.add(responseObj);
+//		return returnArr;
+//	}
 }

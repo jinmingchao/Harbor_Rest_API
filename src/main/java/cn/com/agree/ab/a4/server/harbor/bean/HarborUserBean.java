@@ -194,6 +194,7 @@ public class HarborUserBean {
 		}
 		
 		//UserOperatingService--getUserInfoByUserId
+		//                    --updateUserInfoByUserId
 		public HarborUserBean(Integer user_id, String email, String realname, String comment) {
 			super();
 			this.user_id = user_id;
@@ -202,7 +203,7 @@ public class HarborUserBean {
 			this.comment = comment;
 		}
 		
-		//ModifyUserPwdByUserId
+		//UserOperatingService--ModifyUserPwdByUserId
 		public HarborUserBean(Integer user_id, String old_password, String new_password) {
 			super();
 			this.user_id = user_id;
@@ -213,13 +214,11 @@ public class HarborUserBean {
 		//用户权限信息对象,放harbor域名/用户名/密码
 		//使用该构造器的方法
 		//UserOperatingService--getStatisticAboutUser
-		public HarborUserBean(String domain, String username, String password) {
-			
+		public HarborUserBean(String domain, String username, String password) {			
 			super();
 			this.domain = domain==null||domain.trim().equals("")?"":domain.trim();
 			this.username =  username==null||username.trim().equals("")?"":username.trim();
-			this.password = password==null||password.trim().equals("")?"":password.trim();
-		
+			this.password = password==null||password.trim().equals("")?"":password.trim();		
 		}
 		//UserOperatingService--getUserInfoByUserId
         public HarborUserBean(String domain, String username, String password,Integer user_id) {			
@@ -241,6 +240,9 @@ public class HarborUserBean {
 			this.username = username;
 			this.password = password;
 		}
+		
+		
+		
 		@SuppressWarnings("unused")
 		private String getCurrentTimeStamp() {			
 			return Instant.now().toString(); 					

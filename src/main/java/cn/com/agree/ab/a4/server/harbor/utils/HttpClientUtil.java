@@ -26,7 +26,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
 import cn.com.agree.ab.a4.server.harbor.bean.HarborHttpRequestBean;
 
 /**
@@ -136,7 +135,7 @@ public class HttpClientUtil {
 		}
 	}
 
-	public static JSONObject sendHttpDelete(HarborHttpRequestBean httpBean) {
+	public static JSONObject sendHttpDelete(HarborHttpRequestBean httpBean,Integer... ids) {	
 		HttpDelete delete;
 		CloseableHttpClient httpClient = getHttpClient();
 		CloseableHttpResponse httpResponse = null;
@@ -150,7 +149,6 @@ public class HttpClientUtil {
 			System.out.println(h.getName() + ":" + h.getValue());
 		System.out.println("============" + "METHOD NAME" + "============");
 		System.out.println(httpBean.getMethodToggle());
-
 		try {
 			httpResponse = httpClient.execute(delete);
 			HttpEntity httpEntity = httpResponse.getEntity();
@@ -158,10 +156,15 @@ public class HttpClientUtil {
 			EntityUtils.consume(httpEntity);
 			code = httpResponse.getStatusLine().getStatusCode();
 			kvSet.put("statuscode", code);
+
 			/* 200/400/401/403/404/500 */
 			if (code != HttpStatus.SC_OK) {
-				// unbuildRelationshipBetweenUserAndProject
-				if (httpBean.getMethodToggle().equals("unbuildRelationshipBetweenUserAndProject")) {
+				/**ProjectMemberOperatingService**/
+				//unbuildRelationshipBetweenUserAndProject
+				/**UserOperatingService**/	
+				//deleteUserByUserId
+				if (httpBean.getMethodToggle().equals("unbuildRelationshipBetweenUserAndProject")
+						||httpBean.getMethodToggle().equals("deleteUserByUserId")){
 					// 400/401/403/500
 					if (code == HttpStatus.SC_BAD_REQUEST || code == HttpStatus.SC_UNAUTHORIZED
 							|| code == HttpStatus.SC_FORBIDDEN || code == HttpStatus.SC_INTERNAL_SERVER_ERROR)
@@ -225,8 +228,16 @@ public class HttpClientUtil {
 			kvSet.put("statuscode", code);
 			/* 200/400/401/403/404/500 */
 			if (code != HttpStatus.SC_OK) {
-				// updateRelationshipBetweenUserAndProject
-				if (httpBean.getMethodToggle().equals("updateRelationshipBetweenUserAndProject")) {
+				/**ProjectMemberOperatingService**/
+				//updateRelationshipBetweenUserAndProject
+				/**UserOperatingService**/
+				//endueUserSysAdminAuth
+				//modifyUserPwdByUserId
+				//updateUserInfoByUserId
+				if (httpBean.getMethodToggle().equals("updateRelationshipBetweenUserAndProject")
+						||httpBean.getMethodToggle().equals("endueUserSysAdminAuth")
+							||httpBean.getMethodToggle().equals("modifyUserPwdByUserId")
+								||httpBean.getMethodToggle().equals("updateUserInfoByUserId")) {
 					// 400/401/403/500
 					if (code == HttpStatus.SC_BAD_REQUEST || code == HttpStatus.SC_UNAUTHORIZED
 							|| code == HttpStatus.SC_FORBIDDEN )
@@ -238,14 +249,16 @@ public class HttpClientUtil {
 			} else {
 				try {
 					kvSet.put("result", JSONObject.parseObject(responseEntity));
+					return new JSONObject(kvSet);
 				} catch (Exception e) {
-					kvSet.put("result", JSONArray.parseArray(responseEntity));
-				}
-			}
-
-			return new JSONObject(kvSet);
+					kvSet.put("result",JSONArray.parseArray(responseEntity));
+					JSONObject resObj=new JSONObject();
+					resObj.putAll(kvSet);											
+					return resObj;
+		 		}
+			}			
+			return JSONObject.parseObject("{statusCode:" + code + "}");	
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return JSONObject.parseObject("{statuscode:" + code + "}");
 		} finally {
@@ -306,8 +319,12 @@ public class HttpClientUtil {
 				System.out.println(h.getName() + ":" + h.getValue());
 			System.out.println("============" + "METHOD NAME" + "============");
 			System.out.println(httpBean.getMethodToggle());
-
-			httpResponse = httpClient.execute(get);
+            try {
+            	httpResponse = httpClient.execute(get);				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			HttpEntity httpEntity = httpResponse.getEntity();
 			responseEntity = EntityUtils.toString(httpEntity, CHARSET_UTF_8);
 			System.out.println("============" + "RESPONSE ENTITY" + "============");
@@ -317,6 +334,7 @@ public class HttpClientUtil {
 			System.out.println("============" + "      CODE     "+"============");
 			System.out.println(code);
 			kvSet.put("statuscode", code);
+			
 			/* 0/200/400/401/403/404/500 */
 			if (code != HttpStatus.SC_OK) {
 				/**ProjectMemberOperatingService**/
@@ -340,8 +358,13 @@ public class HttpClientUtil {
 			}
 				/**UserOperatingService**/	
 				//searchUsers
+				//getUserInfoByUserId
 				//getStatisticAboutUser
-				if (httpBean.getMethodToggle().equals("searchUsers")||httpBean.getMethodToggle().equals("getStatisticAboutUser")) {
+				//getCurrentUser
+				if (httpBean.getMethodToggle().equals("searchUsers")
+						||httpBean.getMethodToggle().equals("getUserInfoByUserId")
+							||httpBean.getMethodToggle().equals("getStatisticAboutUser")
+								||httpBean.getMethodToggle().equals("getCurrentUser")) {					  
 					// 400/401/403/404/500
 					if (code == HttpStatus.SC_UNAUTHORIZED || code == HttpStatus.SC_FORBIDDEN
 							|| code == HttpStatus.SC_NOT_FOUND || code == HttpStatus.SC_BAD_REQUEST
@@ -356,11 +379,15 @@ public class HttpClientUtil {
 			} else {
 				try {
 					kvSet.put("result", JSONObject.parseObject(responseEntity));
+					return new JSONObject(kvSet);
 				} catch (Exception e) {
-					kvSet.put("result", JSONArray.parseArray(responseEntity));
-				}
-			}
-			return new JSONObject(kvSet);
+					kvSet.put("result",JSONArray.parseArray(responseEntity));
+					JSONObject resObj=new JSONObject();
+					resObj.putAll(kvSet);											
+					return resObj;
+		 		}
+			}			
+			return JSONObject.parseObject("{statusCode:" + code + "}");	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -374,6 +401,8 @@ public class HttpClientUtil {
 				e.printStackTrace();
 			}
 		}
+		
+	
 
 	}
 
@@ -508,5 +537,7 @@ public class HttpClientUtil {
 		}
 		return reqType;
 	}
+
+	
 
 }
