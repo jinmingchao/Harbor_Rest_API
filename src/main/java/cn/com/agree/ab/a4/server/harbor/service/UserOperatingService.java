@@ -1,20 +1,12 @@
 package cn.com.agree.ab.a4.server.harbor.service;
 
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -266,7 +258,7 @@ public class UserOperatingService {
 		props.put("new_password",modifiedUser.getNew_password());	
 		return HarborHttpRequestBean.sendHttpPut("modifyUserPwdByUserId",text,domain, url,props);				
 	}
-
+	
 	public static JSONObject updateUserInfoByUserId(HarborUserBean hbuser,HarborUserBean modifiedUser) {
 		String text = hbuser.getUsername() + ":" + hbuser.getPassword();
 		String domain = hbuser.getDomain();
@@ -274,55 +266,6 @@ public class UserOperatingService {
 		Map<String, Object> props = new LinkedHashMap<String, Object>();
 		props.put("old_password",modifiedUser.getOld_password());
 		props.put("new_password",modifiedUser.getNew_password());	
-		return HarborHttpRequestBean.sendHttpPut("updateUserInfoByUserId",text,domain, url,props);
-		
-		
-		
+		return HarborHttpRequestBean.sendHttpPut("updateUserInfoByUserId",text,domain, url,props);	
 	}
-//		String text = username + ":" + password;
-//		String encodingText;
-//		encodingText = Base64Util.generateAuthorityText(text);// X
-//		int code = -1;
-//		JSONObject requestObj = new JSONObject();
-//		requestObj.put("email",
-//				userjo.getEmail() == null || userjo.getEmail().trim().equals("") ? "" : userjo.getEmail());
-//		requestObj.put("realname",
-//				userjo.getRealname() == null || userjo.getRealname().trim().equals("") ? "" : userjo.getRealname());
-//		requestObj.put("comment",
-//				userjo.getComment() == null || userjo.getComment().trim().equals("") ? "" : userjo.getComment());
-//		HttpPut put;
-//		String responseEntity = "";
-//		int uid = userjo.getUser_id() == null ? -1 : userjo.getUser_id();
-//		try {
-//			String url = "http://" + domain + "/api/users/" + uid;
-//			put = new HttpPut(url);
-//			StringEntity se = new StringEntity(requestObj.toJSONString());
-//			se.setContentEncoding("UTF-8");
-//			se.setContentType("application/json");// 发送json数据需要设置contentType
-//			put.setEntity(se);
-//			put = (HttpPut) HarborApiUtil_dep.curlSetHeader(put, encodingText, domain, "");
-//			httpResponse = httpClient.execute(put);
-//			code = httpResponse.getStatusLine().getStatusCode();
-//			responseEntity = EntityUtils.toString(httpResponse.getEntity());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		JSONArray returnArr = new JSONArray();
-//		JSONObject statusObj = new JSONObject();
-//		JSONObject responseObj = new JSONObject();
-//		statusObj.put("statusCode", code);
-//		// System.out.println(responseEntity);
-//		returnArr.add(statusObj);
-//		if (code != 200) {
-//			if (code == -1)
-//				responseObj.put("error", "-1");
-//			else if (code == 401 || code == 404)
-//				responseObj.put("error", httpResponse.getStatusLine().getReasonPhrase().replaceAll("\\n", ""));
-//			else // 400,403
-//				responseObj.put("error", responseEntity.replaceAll("\\n", ""));
-//		} else
-//			responseObj.put("success", uid);
-//		returnArr.add(responseObj);
-//		return returnArr;
-//	}
 }

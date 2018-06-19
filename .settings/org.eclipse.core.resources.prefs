@@ -1,8 +1,9 @@
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
+encoding//src/main/java/ClOUD_METHOD_OPERATION_TYPE.properties=UTF-8
 encoding//src/main/java/httpClient/httpClient/TestProjectApi.java=UTF-8
 encoding//src/main/java/httpClient/httpClient/TestProjectMemberApi.java=UTF-8
 encoding//src/main/java/httpClient/httpClient/TestUserApi.java=UTF-8
-encoding//src/main/java/httpRequest.properties=UTF-8
+encoding//src/test/java=UTF-8
 encoding//src/test/util=UTF-8
 encoding/<project>=UTF-8
